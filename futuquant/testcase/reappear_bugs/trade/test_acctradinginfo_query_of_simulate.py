@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from futuquant import *
-from futuquant.testcase.person.winnie.trade.tradeBase import *
+import random
 import pandas
 import unittest
 
@@ -141,4 +141,4 @@ if __name__ == '__main__':
     pandas.set_option('display.width', 1000)
     # unittest.main()
     aq = AcctradinginfoQuery()
-    aq.test_acctradinginfo_query_hk_normal_order_id()
+    aq.test_acctradinginfo_query_err_price2()
