@@ -216,13 +216,15 @@ class TinyQuantFrame(object):
             return
 
         # 创建futu api对象
-        self._quote_ctx = ft.OpenQuoteContext(self._api_ip, self._api_port)
-        if self._market == MARKET_HK:
-            self._trade_ctx = ft.OpenHKTradeContext(self._api_ip, self._api_port)
-        elif self._market == MARKET_US:
-            self._trade_ctx = ft.OpenUSTradeContext(self._api_ip, self._api_port)
-        else:
-            raise Exception("error param!")
+        if self._quote_ctx == 0:
+            self._quote_ctx = ft.OpenQuoteContext(self._api_ip, self._api_port)
+        if self._trade_ctx == 0:
+            if self._market == MARKET_HK:
+                self._trade_ctx = ft.OpenHKTradeContext(self._api_ip, self._api_port)
+            elif self._market == MARKET_US:
+                self._trade_ctx = ft.OpenUSTradeContext(self._api_ip, self._api_port)
+            else:
+                raise Exception("error param!")
 
         if self._env_type == ft.TrdEnv.REAL:
             ret, _ = self._trade_ctx.unlock_trade(self._trade_password)
@@ -248,4 +250,29 @@ class TinyQuantFrame(object):
             self._is_start = True
             self._event_engine.put(Event(type_=EVENT_INI_FUTU_API))
             self._event_engine.start(timer=True)
+
+    def stop(self):
+        # 退出所有事件
+        if self._quote_ctx != 0:
+            self._quote_ctx.close()
+            self._quote_ctx.stop()
+            self._quote_ctx = 0
+        if self._trade_ctx != 0:
+            self._trade_ctx.close()
+            self._trade_ctx.stop()
+            self._trade_ctx = 0
+
+        try:
+            if self._is_init and self._is_start:
+                self._event_engine.unregister(EVENT_INI_FUTU_API, self._process_init_api)
+                self._event_engine.unregister(EVENT_TINY_LOG, self._logger.processLogEvent)
+                self._is_start = False
+                self._event_engine.stop()
+
+        except Exception as err:
+            print(err)
+
+        del self._tiny_strate
+
+        time.sleep(5)
 
