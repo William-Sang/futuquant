@@ -76,24 +76,7 @@ def is_socket_exception_wouldblock(e):
 
 
 def make_ctrl_socks():
-    svr_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    svr_sock.bind(('127.0.0.1', 0))
-    svr_sock.listen(1)
-    port = svr_sock.getsockname()[1]
-    write_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    write_sock.setblocking(False)
-    try:
-        write_sock.connect(('127.0.0.1', port))
-    except Exception as e:
-        if not is_socket_exception_wouldblock(e):
-            logger.warning(make_log_msg("Fail to create ctrl socket", msg=str(e)))
-            return None, None
-
-    read_sock = svr_sock.accept()[0]
-    svr_sock.close()
-    write_sock.setblocking(True)
-    return read_sock, write_sock
-
+    return socket.socketpair(socket.AF_INET, socket.SOCK_STREAM)
 
 class NetManager:
     _default_inst = None
