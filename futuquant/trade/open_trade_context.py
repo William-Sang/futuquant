@@ -422,7 +422,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, order_list
 
-    def place_order(self, price, qty, code, trd_side=TrdSide.NONE, order_type=OrderType.NORMAL,
+    def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
         """
         place order
