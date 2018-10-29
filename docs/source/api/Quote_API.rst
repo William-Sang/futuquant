@@ -173,11 +173,11 @@ get_stock_basicinfo
         lot_size            int            每手数量
         stock_type          str            股票类型，参见 SecurityType_
         stock_child_type    str            窝轮子类型，参见 WrtType_
-        stock_owner         str            所属正股的代码
+        stock_owner         str            涡轮所属正股的代码，或期权标的股的代码
         option_type         str            期权类型，查看 OptionType_
-        strike_time         str            行权日（美股默认是美东时间，港股A股默认是北京时间）
-        strike_price        float          行权价
-        suspension          bool           是否停牌(True表示停牌)
+        strike_time         str            期权行权日（美股默认是美东时间，港股A股默认是北京时间）
+        strike_price        float          期权行权价
+        suspension          bool           期权是否停牌(True表示停牌)
         listing_date        str            上市时间
         stock_id            int            股票id
         delisting           bool           是否退市
@@ -440,7 +440,7 @@ get_market_snapshot
  pe_ratio                        float          市盈率（该字段为比例字段，默认不展示%）
  pb_ratio                        float          市净率（该字段为比例字段，默认不展示%）
  pe_ttm_ratio                    float          市盈率TTM（该字段为比例字段，默认不展示%）
- stock_owner                     str            所属正股的代码
+ stock_owner                     str            涡轮所属正股的代码或期权的标的股代码
  wrt_valid                       bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
  wrt_conversion_ratio            float          换股比率（该字段为比例字段，默认不展示%）
  wrt_type                        str            窝轮类型，参见 WrtType_
@@ -459,8 +459,7 @@ get_market_snapshot
  price_spread                    float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
  option_valid                    bool           是否是期权（为true时以下期权相关的字段才有合法数值）
  option_type                     str            期权类型，参见 OptionType_
- owner                           str            标的股
- strike_time                     str            行权日（美股默认是美东时间，港股A股默认是北京时间）
+ strike_time                     str            期权行权日（美股默认是美东时间，港股A股默认是北京时间）
  option_strike_price             float          行权价
  option_contract_size            int            每份合约数
  option_open_interest            int            未平仓合约数
@@ -947,19 +946,20 @@ get_order_book
  :param code: 股票代码
  :return: (ret, data)
 
-        ret == RET_OK 返回字典，数据格式如下
+ ret == RET_OK 返回字典，数据格式如下::
+ 
+  {
+  'code': 股票代码
+  'Ask':[ (ask_price1, ask_volume1，order_num), (ask_price2, ask_volume2, order_num),…]
+  'Bid': [ (bid_price1, bid_volume1, order_num), (bid_price2, bid_volume2, order_num),…]
+  }
 
-        ret != RET_OK 返回错误字符串
+ | 'Ask'：卖盘
+ | 'Bid'买盘
+ | 每个元组的含义是(委托价格，委托数量，委托订单数)
 
- .. code:: python
-
-    {
-        'code': 股票代码
-        'Ask':[ (ask_price1, ask_volume1，order_num), (ask_price2, ask_volume2, order_num),…]
-        'Bid': [ (bid_price1, bid_volume1, order_num), (bid_price2, bid_volume2, order_num),…]
-    }
-
-    'Ask'：卖盘， 'Bid'买盘。每个元组的含义是(委托价格，委托数量，委托订单数)
+ ret != RET_OK 返回错误字符串
+    
         
  :Example:
 
@@ -1149,27 +1149,30 @@ get_order_detail
 
  查询A股Level 2权限下提供的委托明细
 
- :param code: 股票代码,例如：'HK.02318'
+ :param code: 股票代码,例如：'SZ.000001'
  :return: (ret, data)
 
-        ret == RET_OK data为1个dict，包含以下数据
+ ret == RET_OK data为1个dict，包含以下数据::
+		
+  {"code": 股票代码,
+  "Ask": [ order_num, [order_volume1, order_volume2] ]
+  "Bid": [ order_num, [order_volume1, order_volume2] ]
+  }
 
-        ret != RET_OK data为错误字符串
+ | "Ask": 卖盘 
+ | "Bid": 买盘
+ | order_num：委托订单数量
+ | order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
 
-		{‘code’: 股票代码
-		‘Ask’:[ order_num, [order_volume1, order_volume2] ]
-		‘Bid’: [ order_num, [order_volume1, order_volume2] ]
-		}
-
-		'Ask'：卖盘， 'Bid'买盘。order_num指委托订单数量，order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
+ ret != RET_OK data为错误字符串
         
-
  :Example:
 
  .. code:: python
 
     from futuquant import *
     quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
+	quote_ctx.subscribe('SZ.000001', SubType.ORDER_DETAIL)
     print(quote_ctx.get_order_detail('SZ.000001')
     quote_ctx.close()
 
@@ -1442,6 +1445,7 @@ TickerHandlerBase - 实时逐笔推送回调处理类
 .. note::
 
     * 行情连接断开重连后，OpenD拉取断开期间的逐笔数据（最多50根）并推送，可通过push_data_type字段区分
+
 -------------------------------------------
 
 on_recv_rsp
@@ -1511,7 +1515,7 @@ BrokerHandlerBase - 实时经纪推送回调处理类
 
 .. code:: python
     
-	class BrokerTest(BrokerHandlerBase):
+    class BrokerTest(BrokerHandlerBase):
         def on_recv_rsp(self, rsp_str):
             ret_code, err_or_stock_code, data = super(BrokerTest, self).on_recv_rsp(rsp_str)
             if ret_code != RET_OK:
@@ -1556,7 +1560,7 @@ OrderDetailHandlerBase - A股委托明细推送回调处理类
 
 .. code:: python
     
-	class OrderDetailTest(OrderDetailHandlerBase):
+    class OrderDetailTest(OrderDetailHandlerBase):
         def on_recv_rsp(self, rsp_str):
             ret_code, err_or_stock_code, data = super(OrderDetailTest, self).on_recv_rsp(rsp_str)
             if ret_code != RET_OK:
@@ -1571,7 +1575,7 @@ OrderDetailHandlerBase - A股委托明细推送回调处理类
     quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
     handler = OrderDetailTest()
     quote_ctx.set_handler(handler)
-    quote_ctx.subscribe(['HK.00700'], [SubType.ORDER_DETAIL])
+    quote_ctx.subscribe(['SZ.000001'], [SubType.ORDER_DETAIL])
     time.sleep(15)
     quote_ctx.close()
 	
@@ -1588,9 +1592,7 @@ on_recv_rsp
  注意该回调是在独立子线程中
 
  :param rsp_pb: 派生类中不需要直接处理该参数
- :return: 成功时返回(RET_OK, data), 相关data含义见 get_order_detail_ 的返回值说明
-
-          失败时返回(RET_ERROR, ERR_MSG)
+ :return: 参见 get_order_detail_ 的返回值说明
 
 ----------------------------    
 
