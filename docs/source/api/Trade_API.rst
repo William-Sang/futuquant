@@ -653,7 +653,9 @@ on_recv_rsp - 响应成交推送
  history_order_list_query          10
  history_deal_list_query           10
  ==========================        =====================
+.. note::
 
+  * 后台另外限制了下单频率，1秒内下单不可超过5次
 
 
 
