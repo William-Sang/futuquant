@@ -7,9 +7,9 @@ import time
 from copy import copy
 from datetime import datetime, timedelta
 from .TinyDefine import *
-from .vnpyInc import *
+from .TinyQuantBase import *
 import futuquant as ft
-
+from futuquant.common.event.eventEngine import *
 
 class FutuDataEvent(object):
     name = "FutuDataEvent"
@@ -173,7 +173,7 @@ class FutuDataEvent(object):
 
     def _notify_new_tick_event(self, tick):
         """tick推送"""
-        if tick.time is EMPTY_STRING:
+        if tick.time is '':
             return
         event = Event(type_=EVENT_TINY_TICK)
         event.dict_['data'] = tick

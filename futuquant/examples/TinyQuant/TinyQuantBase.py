@@ -12,12 +12,23 @@ import time
 import numpy as np
 import talib
 
-from vnpy.event import *
-from vnpy.event.eventType import EVENT_TIMER
-from vnpy.trader.vtObject import VtBaseData
-from vnpy.trader.vtFunction import getJsonPath, getTempPath
-from vnpy.trader.language.chinese.constant import (EMPTY_STRING, EMPTY_UNICODE,
-                                    EMPTY_FLOAT, EMPTY_INT)
+# from vnpy.event import *
+# from vnpy.event.eventType import EVENT_TIMER
+# from vnpy.trader.vtObject import VtBaseData
+# from vnpy.trader.vtFunction import getJsonPath, getTempPath
+# from vnpy.trader.language.chinese.constant import (EMPTY_STRING, EMPTY_UNICODE,
+#                                     EMPTY_FLOAT, EMPTY_INT)
+
+
+########################################################################
+class VtBaseData(object):
+    """回调函数推送数据的基础类，其他数据类继承于此"""
+
+    #----------------------------------------------------------------------
+    def __init__(self):
+        """Constructor"""
+        self.gatewayName = ""             # Gateway名称
+        self.rawData = None                     # 原始数据
 
 
 """
