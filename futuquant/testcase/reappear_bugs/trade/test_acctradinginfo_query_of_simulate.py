@@ -29,10 +29,10 @@ class AcctradinginfoQuery(unittest.TestCase):
         ret_code, ret_data = trade_ctx_hk.acctradinginfo_query(order_type, code, price, order_id,
                                                                adjust_limit=adjust_limit, trd_env=TrdEnv.SIMULATE,
                                                                acc_id=0, acc_index=0)
-        self.assertEqual(ret_code, RET_OK)
-        keys = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back']
-        for k in keys:
-            self.assertTrue(ret_data[k][0] != '')
+        # self.assertEqual(ret_code, RET_OK)
+        # keys = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back']
+        # for k in keys:
+        #     self.assertTrue(ret_data[k][0] != '')
         print(ret_data)
 
 
@@ -52,7 +52,7 @@ class AcctradinginfoQuery(unittest.TestCase):
         print(ret_code)
         print(ret_data)
 
-    # bug单：模拟交易查询美股普通订单的最大可买可卖返回失败
+    # bug单：美股下单后获取最大可买可卖时字段max_cash_buy为0
     def test_acctradinginfo_query_us_normal_order_id(self):
         # 测试点：美股普通订单
         order_type = OrderType.NORMAL
@@ -69,11 +69,13 @@ class AcctradinginfoQuery(unittest.TestCase):
                                                            adjust_limit=adjust_limit,trd_env=TrdEnv.SIMULATE)
         print(ret_data_po)
         order_id = ret_data_po['order_id'][0]
-        ret_code, ret_data = trade_ctx_us.acctradinginfo_query(order_type, code, price, None,
+        ret_code, ret_data = trade_ctx_us.acctradinginfo_query(order_type, code, price, order_id,
                                                                adjust_limit=adjust_limit, trd_env=TrdEnv.SIMULATE,
                                                                acc_id=0, acc_index=0)
         print(ret_code)
         print(ret_data)
+
+
 
 
     # bug单：下A股普通订单之后查询最大可买可卖数据有误
@@ -141,4 +143,4 @@ if __name__ == '__main__':
     pandas.set_option('display.width', 1000)
     # unittest.main()
     aq = AcctradinginfoQuery()
-    aq.test_acctradinginfo_query_err_price2()
+    aq.test_acctradinginfo_query_us_normal()
