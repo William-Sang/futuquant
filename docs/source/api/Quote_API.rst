@@ -1162,7 +1162,7 @@ get_order_detail
  | "Ask": 卖盘 
  | "Bid": 买盘
  | order_num：委托订单数量
- | order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
+ | order_volume：是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
 
  ret != RET_OK data为错误字符串
         
