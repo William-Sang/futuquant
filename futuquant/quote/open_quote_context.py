@@ -625,7 +625,7 @@ class OpenQuoteContext(OpenContextBase):
                 pe_ratio                   float          市盈率（该字段为比例字段，默认不展示%）
                 pb_ratio                   float          市净率（该字段为比例字段，默认不展示%）
                 pe_ttm_ratio               float          市盈率TTM（该字段为比例字段，默认不展示%）
-                stock_owner                str            所属正股的代码
+                stock_owner                str            涡轮所属正股的代码或期权的标的股代码
                 wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
                 wrt_type                   str            窝轮类型，参见WrtType
