@@ -1037,7 +1037,7 @@
 <li><strong>order_type</strong> – 订单类型，参见 <a class="reference external" href="Base_API.html#ordertype">OrderType</a></li>
 <li><strong>code</strong> – 证券代码，例如’HK.00700’</li>
 <li><strong>price</strong> – 报价，3位精度</li>
-<li><strong>order_id</strong> – 订单号。如果是新下单，则可以传None。如果是改单则要传单号。</li>
+<li><strong>order_id</strong> – 订单号。如果是新下单，则可以传None。如果是改单则要传单号，此时计算最大可买可卖时会包括该订单所消耗的购买力。</li>
 <li><strong>adjust_limit</strong> – 调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%。默认0表示不调整</li>
 <li><strong>trd_env</strong> – 交易环境，参见 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a></li>
 <li><strong>acc_id</strong> – 业务账号，默认0表示第1个</li>
@@ -1316,6 +1316,12 @@
 </tbody>
 </table>
 </div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>后台另外限制了下单频率，1秒内下单不可超过5次</li>
+</ul>
+</div>
 </div>
 </div>
 

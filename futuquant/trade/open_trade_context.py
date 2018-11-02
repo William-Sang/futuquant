@@ -422,15 +422,15 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, order_list
 
-    def place_order(self, price, qty, code, trd_side=TrdSide.NONE, order_type=OrderType.NORMAL,
+    def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
         """
-        ret, msg = self._check_trd_env(trd_env)
-        if ret != RET_OK:
-            return ret, msg
+        # ret, msg = self._check_trd_env(trd_env)
+        # if ret != RET_OK:
+        #     return ret, msg
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
@@ -757,7 +757,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         :param acc_id:
         :return: 返回值见基类及接口文档，但order_type仅有OrderType.NORMAL, order_status没有OrderStatus.DISABLED
         """
-        return super().order_list_query(order_id, status_filter_list, code, start, end, trd_env, acc_id, acc_index)
+        return super(OpenHKCCTradeContext, self).order_list_query(order_id, status_filter_list, code, start, end, trd_env, acc_id, acc_index)
 
     def place_order(self, price, qty, code, trd_side=TrdSide.NONE, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
@@ -774,7 +774,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         :param acc_index:
         :return: 返回值见基类接口注释，但order_type仅有OrderType.NORMAL
         """
-        return super().place_order(price=price, qty=qty, code=code, trd_side=trd_side,
+        return super(OpenHKCCTradeContext, self).place_order(price=price, qty=qty, code=code, trd_side=trd_side,
                                    order_type=order_type, adjust_limit=adjust_limit,
                                    trd_env=trd_env, acc_id=acc_id, acc_index=acc_index)
 
@@ -790,7 +790,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         :param acc_id:
         :return:
         """
-        return super().modify_order(modify_order_op=modify_order_op,
+        return super(OpenHKCCTradeContext, self).modify_order(modify_order_op=modify_order_op,
                                     order_id=order_id,
                                     qty=qty,
                                     price=price,
@@ -811,7 +811,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         :param acc_id:
         :return: 详细说明见基类接口文档，但有以下不同：返回值没有counter_broker_id、counter_broker_name字段
         """
-        return super().deal_list_query(code=code, trd_env=trd_env, acc_id=acc_id, acc_index=acc_index)
+        return super(OpenHKCCTradeContext, self).deal_list_query(code=code, trd_env=trd_env, acc_id=acc_id, acc_index=acc_index)
 
     def history_order_list_query(self, status_filter_list=[], code='', start='', end='',
                                  trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
@@ -826,7 +826,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         :param acc_index:
         :return: 返回值见基类及接口文档，但order_type仅有OrderType.NORMAL, order_status没有OrderStatus.DISABLED
         """
-        return super().history_order_list_query(status_filter_list=status_filter_list,
+        return super(OpenHKCCTradeContext, self).history_order_list_query(status_filter_list=status_filter_list,
                                                 code=code,
                                                 start=start,
                                                 end=end,

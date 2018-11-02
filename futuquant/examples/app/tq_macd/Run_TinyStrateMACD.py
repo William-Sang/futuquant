@@ -5,10 +5,15 @@
 '''
 from futuquant.examples.TinyQuant.TinyQuantFrame import *
 from TinyStrateMACD import *
+import threading
 
 
 if __name__ == '__main__':
     my_strate = TinyStrateMACD()
     frame = TinyQuantFrame(my_strate)
-    frame.run()
+    while True:
+        frame.run()
+        time.sleep(10000)
+        frame.stop()
+
 
