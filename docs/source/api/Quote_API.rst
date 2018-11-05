@@ -1152,19 +1152,19 @@ get_order_detail
  :param code: 股票代码,例如：'SZ.000001'
  :return: (ret, data)
 
- ret == RET_OK data为1个dict，包含以下数据::
+          ret == RET_OK data为1个dict，包含以下数据:
 		
-  {"code": 股票代码,
-  "Ask": [ order_num, [order_volume1, order_volume2] ]
-  "Bid": [ order_num, [order_volume1, order_volume2] ]
-  }
+          | {"code": 股票代码,
+          | "Ask": [ order_num, [order_volume1, order_volume2] ]
+          | "Bid": [ order_num, [order_volume1, order_volume2] ]
+          | }
 
- | "Ask": 卖盘 
- | "Bid": 买盘
- | order_num：委托订单数量
- | order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
+          | "Ask": 卖盘 
+          | "Bid": 买盘
+          | order_num：委托订单数量
+          | order_volume：是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
 
- ret != RET_OK data为错误字符串
+          ret != RET_OK data为错误字符串
         
  :Example:
 
@@ -1172,7 +1172,7 @@ get_order_detail
 
     from futuquant import *
     quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-	quote_ctx.subscribe('SZ.000001', SubType.ORDER_DETAIL)
+    quote_ctx.subscribe('SZ.000001', SubType.ORDER_DETAIL)
     print(quote_ctx.get_order_detail('SZ.000001')
     quote_ctx.close()
 
