@@ -388,7 +388,7 @@ class RtDataQuery:
                 "opened_mins": record.minute,
                 "cur_price": record.price,
                 "last_close": record.lastClosePrice,
-                "avg_price": record.avgPrice,
+                "avg_price": record.avgPrice if record.HasField('avgPrice') else None,
                 "turnover": record.turnover,
                 "volume": record.volume
             } for record in raw_rt_data_list
