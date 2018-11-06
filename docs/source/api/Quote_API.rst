@@ -502,7 +502,7 @@ is_blank                bool           数据状态；正常数据为False，伪
 opened_mins             int            零点到当前多少分钟
 cur_price               float          当前价格
 last_close              float          昨天收盘的价格
-avg_price               float          平均价格
+avg_price               float          平均价格（对于期权，该字段为None）
 volume                  float          成交量
 turnover                float          成交金额
 =====================   ===========   ===================================================================
