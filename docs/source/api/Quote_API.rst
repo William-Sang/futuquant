@@ -456,7 +456,7 @@ get_market_snapshot
  wrt_implied_volatility          float          窝轮引伸波幅
  wrt_premium                     float          窝轮溢价
  lot_size                        int            每手股数
- price_spread                    float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
+ price_spread                    float          当前向上的摆盘价差,亦即摆盘数据的卖档的相邻档位的报价差
  option_valid                    bool           是否是期权（为true时以下期权相关的字段才有合法数值）
  option_type                     str            期权类型，参见 OptionType_
  strike_time                     str            期权行权日（美股默认是美东时间，港股A股默认是北京时间）
@@ -826,7 +826,7 @@ get_stock_quote
         amplitude               int            振幅
         suspension              bool           是否停牌(True表示停牌)
         listing_date            str            上市日期 (yyyy-MM-dd)
-        price_spread            float          当前价差，亦即摆盘数据的买档或卖档的相邻档位的报价差
+        price_spread            float          当前向上的价差，亦即摆盘数据的卖档的相邻档位的报价差
 		dark_status             str            暗盘交易状态，见 DarkStatus_
         strike_price            float          行权价
         contract_size           int            每份合约数
