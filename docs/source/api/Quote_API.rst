@@ -1152,12 +1152,13 @@ get_order_detail
  :param code: 股票代码,例如：'SZ.000001'
  :return: (ret, data)
 
-          ret == RET_OK data为1个dict，包含以下数据:
+          ret == RET_OK data为1个dict，包含以下数据::
 		
-          | {"code": 股票代码,
-          | "Ask": [ order_num, [order_volume1, order_volume2] ]
-          | "Bid": [ order_num, [order_volume1, order_volume2] ]
-          | }
+           {
+            "code": 股票代码,
+            "Ask": [ order_num, [order_volume1, order_volume2, ...] ]
+            "Bid": [ order_num, [order_volume1, order_volume2, ...] ]
+           }
 
           | "Ask": 卖盘 
           | "Bid": 买盘
