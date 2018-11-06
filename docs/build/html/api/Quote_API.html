@@ -1369,7 +1369,7 @@ start和end的组合如下：</p>
 </tr>
 <tr class="row-even"><td>avg_price</td>
 <td>float</td>
-<td>平均价格</td>
+<td>平均价格（对于期权，该字段为None）</td>
 </tr>
 <tr class="row-odd"><td>volume</td>
 <td>float</td>
@@ -2688,11 +2688,12 @@ start与end的组合如下：</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>code</strong> – 股票代码,例如：’SZ.000001’</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(ret, data)<p>ret == RET_OK data为1个dict，包含以下数据:</p>
-<div class="line-block">
-<div class="line">{“code”: 股票代码,</div>
-<div class="line">”Ask”: [ order_num, [order_volume1, order_volume2] ]</div>
-<div class="line">”Bid”: [ order_num, [order_volume1, order_volume2] ]</div>
-<div class="line">}</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">股票代码</span><span class="p">,</span>
+ <span class="s2">&quot;Ask&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="n">order_num</span><span class="p">,</span> <span class="p">[</span><span class="n">order_volume1</span><span class="p">,</span> <span class="n">order_volume2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="p">]</span>
+ <span class="s2">&quot;Bid&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="n">order_num</span><span class="p">,</span> <span class="p">[</span><span class="n">order_volume1</span><span class="p">,</span> <span class="n">order_volume2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 <div class="line-block">
 <div class="line">”Ask”: 卖盘</div>
