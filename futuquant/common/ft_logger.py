@@ -71,12 +71,12 @@ class FTLog(object):
         if sys_str == "Windows":
             self.log_path = os.path.join(os.getenv("appdata"), __LogPathName__)
         else:
-            self.log_path = os.path.join(os.environ['HOME'], __LogPathName__)
+            self.log_path = os.path.join(os.environ['HOME'], ("." + __LogPathName__))
             # pwd_name = pwd.getpwuid(os.getuid())[0]
             # self.log_path = os.path.join(pwd_name, __LogName__)
 
         self.file_level = logging.DEBUG
-        self.console_level = logging.ERROR
+        self.console_level = logging.WARNING
 
         if "file_level" in args:
             self.file_level = args["file_level"]
