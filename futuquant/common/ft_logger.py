@@ -54,12 +54,7 @@ else:  # pragma: no cover
         except Exception:
             return sys.exc_info()[2].tb_frame.f_back
 
-__LogName__ = "com.futunn.FutuOpenD//Log"
-
-sys_str = platform.system()
-if sys_str == "Linux":
-    import pwd
-
+__LogPathName__ = "com.futunn.FutuOpenD//Log"
 
 
 
@@ -74,10 +69,11 @@ class FTLog(object):
     def __init__(self, **args):
         sys_str = platform.system()
         if sys_str == "Windows":
-            self.log_path = os.path.join(os.getenv("appdata"), __LogName__)
+            self.log_path = os.path.join(os.getenv("appdata"), __LogPathName__)
         else:
-            pwd_name = pwd.getpwuid(os.getuid())[0]
-            self.log_path = os.path.join(pwd_name, __LogName__)
+            self.log_path = os.path.join(os.environ['HOME'], __LogPathName__)
+            # pwd_name = pwd.getpwuid(os.getuid())[0]
+            # self.log_path = os.path.join(pwd_name, __LogName__)
 
         self.file_level = logging.DEBUG
         self.console_level = logging.ERROR
