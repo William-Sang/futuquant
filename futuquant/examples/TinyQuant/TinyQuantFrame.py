@@ -15,9 +15,7 @@ from futuquant.common.event.eventEngine import EventEngine2
 import logging
 import platform
 
-sys_str = platform.system()
-if sys_str == "Linux":
-    import pwd
+__LogPathName__ = "com.futunn.FutuOpenD//Log"
 
 def getJsonPath(name, moduleFile):
     """
@@ -188,10 +186,9 @@ class TinyQuantFrame(object):
             self.formatter = logging.Formatter('%(asctime)s  %(levelname)s: %(message)s')
             sys_str = platform.system()
             if sys_str == "Windows":
-                self.log_path = os.path.join(os.getenv("appdata"), "com.futunn.FutuOpenD//Log")
+                self.log_path = os.path.join(os.getenv("appdata"), __LogPathName__)
             else:
-                pwd_name = pwd.getpwuid(os.getuid())[0]
-                self.log_path = os.path.join(pwd_name, "com.futunn.FutuOpenD//Log")
+                self.log_path = os.path.join(os.environ['HOME'], __LogPathName__)
 
             # 添加NullHandler防止无handler的错误输出
             null_handler = logging.NullHandler()
