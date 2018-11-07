@@ -188,7 +188,7 @@ class TinyQuantFrame(object):
             if sys_str == "Windows":
                 self.log_path = os.path.join(os.getenv("appdata"), __LogPathName__)
             else:
-                self.log_path = os.path.join(os.environ['HOME'], __LogPathName__)
+                self.log_path = os.path.join(os.environ['HOME'], ("." + __LogPathName__))
 
             # 添加NullHandler防止无handler的错误输出
             null_handler = logging.NullHandler()
@@ -330,11 +330,11 @@ class TinyQuantFrame(object):
         # 退出所有事件
         if self._quote_ctx != 0:
             self._quote_ctx.close()
-            self._quote_ctx.stop()
+            del self._quote_ctx
             self._quote_ctx = 0
         if self._trade_ctx != 0:
             self._trade_ctx.close()
-            self._trade_ctx.stop()
+            del self._trade_ctx
             self._trade_ctx = 0
 
         try:

@@ -92,7 +92,7 @@ class OpenContextBase(object):
             self._conn_id = 0
             self._net_mgr = None
             self.stop()
-            self._handlers_ctx = None
+            self._handler_ctx = None
             if self._reconnect_timer is not None:
                 self._reconnect_timer.cancel()
                 self._reconnect_timer = None
