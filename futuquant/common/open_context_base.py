@@ -297,7 +297,7 @@ class OpenContextBase(object):
         if ret == RET_OK:
             ret, msg = self._net_mgr.send(conn_id, req_str)
         else:
-            logger.warning(make_log_msg('InitConnect.pack_req fail', msg=msg))
+            logger.warning(FTLog.make_log_msg('InitConnect.pack_req fail', msg=msg))
 
         if ret != RET_OK:
             with self._lock:
