@@ -70,7 +70,7 @@ class TinyStrateMeanLine(TinyStrateBase):
         pass
 
     def get_sma(self, n, symbol):
-        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11122)
+        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
         now = datetime.datetime.now()
         end_str = now.strftime('%Y-%m-%d')
         start = now - datetime.timedelta(days=365)
@@ -104,7 +104,7 @@ class TinyStrateMeanLine(TinyStrateBase):
 
     def test(self):
         pwd_unlock = '123456' #输入交易密码
-        trade_ctx = OpenHKTradeContext(host='127.0.0.1', port=11122)
+        trade_ctx = OpenHKTradeContext(host='127.0.0.1', port=11111)
         _, lock_message = trade_ctx.unlock_trade(pwd_unlock)
         print(lock_message)
         _ , accinfo = trade_ctx.accinfo_query()

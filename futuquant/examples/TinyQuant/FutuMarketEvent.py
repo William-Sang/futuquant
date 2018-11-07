@@ -3,11 +3,11 @@
 
 '''
 
-from .vnpyInc import *
+# from .vnpyInc import *
 from .TinyDefine import *
 from datetime import datetime
 import futuquant as ft
-
+from futuquant.common.event.eventEngine import *
 
 # 简化市场状态
 class Futu_Market_State:

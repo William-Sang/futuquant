@@ -4,18 +4,43 @@
 
 """
 import json
-from .vnpyInc import *
-from .TinyDefine import *
-from .TinyStrateBase import TinyStrateBase
+# from .vnpyInc import *
+# from .TinyDefine import *
+# from .TinyStrateBase import TinyStrateBase
 from .FutuMarketEvent import *
 from .FutuDataEvent import *
 import futuquant as ft
+import os
+from futuquant.common.event.eventEngine import EventEngine2
+import logging
+import platform
+
+sys_str = platform.system()
+if sys_str == "Linux":
+    import pwd
+
+def getJsonPath(name, moduleFile):
+    """
+    获取JSON配置文件的路径：
+    1. 优先从当前工作目录查找JSON文件
+    2. 若无法找到则前往模块所在目录查找
+    """
+    currentFolder = os.getcwd()
+    currentJsonPath = os.path.join(currentFolder, name)
+    if os.path.isfile(currentJsonPath):
+        return currentJsonPath
+    else:
+        moduleFolder = os.path.abspath(os.path.dirname(moduleFile))
+        moduleJsonPath = os.path.join(moduleFolder, '.', name)
+        return moduleJsonPath
+
 
 
 class TinyQuantFrame(object):
     """策略frame"""
     settingFileName = 'setting.json'
     settingfilePath = getJsonPath(settingFileName, __file__)
+    _logger = None
 
     def __init__(self, tinyStrate):
         """frame settings"""
@@ -28,8 +53,11 @@ class TinyQuantFrame(object):
         self._global_settings = {}
         self._is_init = False
 
+        self.consoleHandler = None
+        self.fileHandler = None
+
         self._tiny_strate = tinyStrate
-        self._logger = LogEngine()
+        # self._logger = LogEngine()
         self._event_engine = EventEngine2()
 
         # 这里没有用None,因为None在 __loadSetting中当作错误参数检查用了
@@ -40,9 +68,11 @@ class TinyQuantFrame(object):
 
         self._is_start = False
         self._is_init = self.__loadSetting()
+        self.__init_log_engine()  # 初始化log
         if self._is_init:
-            self.__initLogEngine()
             self._tiny_strate.init_strate(self._global_settings, self, self._event_engine)
+
+
 
     @property
     def today_date(self):
@@ -143,12 +173,59 @@ class TinyQuantFrame(object):
         return None
 
     def writeCtaLog(self, content):
-        log = VtLogData()
-        log.logContent = content
-        log.gatewayName = 'FUTU'
-        event = Event(type_=EVENT_TINY_LOG)
-        event.dict_['data'] = log
-        self._event_engine.put(event)
+        self._logger.info(content)
+        # log = VtLogData()
+        # log.logContent = content
+        # log.gatewayName = 'FUTU'
+        # event = Event(type_=EVENT_TINY_LOG)
+        # event.dict_['data'] = log
+        # self._event_engine.put(event)
+
+    #初始化log
+    def __init_log_engine(self):
+        if self._logger is None:
+            self._logger = logging.getLogger('FTDemo')
+            self.formatter = logging.Formatter('%(asctime)s  %(levelname)s: %(message)s')
+            sys_str = platform.system()
+            if sys_str == "Windows":
+                self.log_path = os.path.join(os.getenv("appdata"), "com.futunn.FutuOpenD//Log")
+            else:
+                pwd_name = pwd.getpwuid(os.getuid())[0]
+                self.log_path = os.path.join(pwd_name, "com.futunn.FutuOpenD//Log")
+
+            # 添加NullHandler防止无handler的错误输出
+            null_handler = logging.NullHandler()
+            self._logger.addHandler(null_handler)
+
+            # 设置日志级别
+            frame_setting = self._global_settings["frame"]
+            level_dict = {
+                "debug": logging.DEBUG,
+                "info": logging.INFO,
+                "warn": logging.WARN,
+                "error": logging.ERROR,
+                "critical": logging.CRITICAL
+            }
+            level = level_dict.get(frame_setting["logLevel"], logging.CRITICAL)
+            self._logger.setLevel(level)
+
+            # 设置输出
+            if frame_setting['logConsole']:
+                if not self.consoleHandler:
+                    self.consoleHandler = logging.StreamHandler()
+                    self.consoleHandler.setLevel(level)
+                    self.consoleHandler.setFormatter(self.formatter)
+                    self._logger.addHandler(self.consoleHandler)
+
+            if frame_setting['logFile']:
+                if not self.fileHandler:
+                    filename = 'vt_' + datetime.now().strftime('%Y%m%d') + '.log'
+                    filepath = os.path.join(self.log_path, filename)
+                    self.fileHandler = logging.FileHandler(filepath)
+                    self.fileHandler.setLevel(level)
+                    self.fileHandler.setFormatter(self.formatter)
+                    self._logger.addHandler(self.fileHandler)
+
 
     def __loadSetting(self):
         """读取策略配置"""
@@ -169,10 +246,10 @@ class TinyQuantFrame(object):
                     d[key] = frame_setting[key]
 
             # check paramlist
-            for key in d.keys():
-                if d[key] is None:
-                    str_error = "setting.json - 'frame' config no key:'%s'" % key
-                    raise Exception(str_error)
+            # for key in d.keys():
+            #     if d[key] is None:
+            #         str_error = "setting.json - 'frame' config no key:'%s'" % key
+            #         raise Exception(str_error)
 
             # check _env_type / market
             env_list = [ft.TrdEnv.REAL, ft.TrdEnv.SIMULATE]
@@ -187,31 +264,31 @@ class TinyQuantFrame(object):
 
         return True
 
-    def __initLogEngine(self):
-        # 设置日志级别
-        frame_setting = self._global_settings['frame']
-        levelDict = {
-            "debug": LogEngine.LEVEL_DEBUG,
-            "info": LogEngine.LEVEL_INFO,
-            "warn": LogEngine.LEVEL_WARN,
-            "error": LogEngine.LEVEL_ERROR,
-            "critical": LogEngine.LEVEL_CRITICAL,
-        }
-        level = levelDict.get(frame_setting["logLevel"], LogEngine.LEVEL_CRITICAL)
-        self._logger.setLogLevel(level)
-
-        # 设置输出
-        if frame_setting['logConsole']:
-            self._logger.addConsoleHandler()
-
-        if frame_setting['logFile']:
-            self._logger.addFileHandler()
+    # def __initLogEngine(self):
+    #     # 设置日志级别
+    #     frame_setting = self._global_settings['frame']
+    #     levelDict = {
+    #         "debug": LogEngine.LEVEL_DEBUG,
+    #         "info": LogEngine.LEVEL_INFO,
+    #         "warn": LogEngine.LEVEL_WARN,
+    #         "error": LogEngine.LEVEL_ERROR,
+    #         "critical": LogEngine.LEVEL_CRITICAL,
+    #     }
+    #     level = levelDict.get(frame_setting["logLevel"], LogEngine.LEVEL_CRITICAL)
+    #     self._logger.setLogLevel(level)
+    #
+    #     # 设置输出
+    #     if frame_setting['logConsole']:
+    #         self._logger.addConsoleHandler()
+    #
+    #     if frame_setting['logFile']:
+    #         self._logger.addFileHandler()
 
         # log事件监听
-        self._event_engine.register(EVENT_TINY_LOG, self._logger.processLogEvent)
-        self._event_engine.register(EVENT_INI_FUTU_API, self._process_init_api)
+        # self._event_engine.register(EVENT_TINY_LOG, self._logger.processLogEvent)
+        # self._event_engine.register(EVENT_INI_FUTU_API, self._process_init_api)
 
-    def _process_init_api(self, event):
+    def _process_init_api(self):
         if type(self._quote_ctx) != int or type(self._trade_ctx) != int:
             return
 
@@ -248,7 +325,8 @@ class TinyQuantFrame(object):
         # 启动事件引擎
         if self._is_init and not self._is_start:
             self._is_start = True
-            self._event_engine.put(Event(type_=EVENT_INI_FUTU_API))
+            self._process_init_api()
+            #self._event_engine.put(Event(type_=EVENT_INI_FUTU_API))
             self._event_engine.start(timer=True)
 
     def stop(self):
@@ -264,8 +342,8 @@ class TinyQuantFrame(object):
 
         try:
             if self._is_init and self._is_start:
-                self._event_engine.unregister(EVENT_INI_FUTU_API, self._process_init_api)
-                self._event_engine.unregister(EVENT_TINY_LOG, self._logger.processLogEvent)
+                #self._event_engine.unregister(EVENT_INI_FUTU_API, self._process_init_api)
+                #self._event_engine.unregister(EVENT_TINY_LOG, self._logger.processLogEvent)
                 self._is_start = False
                 self._event_engine.stop()
 

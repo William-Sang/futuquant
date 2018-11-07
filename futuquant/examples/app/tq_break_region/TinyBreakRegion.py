@@ -83,7 +83,7 @@ class TinyBreakRegion(TinyStrateBase):
 
 
     def track(self, symbol):
-        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11122)
+        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
         now = datetime.datetime.now()
         end_str = now.strftime('%Y-%m-%d')
         start = now - datetime.timedelta(days=365)
@@ -113,7 +113,7 @@ class TinyBreakRegion(TinyStrateBase):
         return up_, down_
 
     def test(self):
-        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11122)
+        quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
         print(quote_ctx.unsubscribe(['HK.00700'], [SubType.QUOTE]))
         print(quote_ctx.get_rt_data('HK.00700'))
 

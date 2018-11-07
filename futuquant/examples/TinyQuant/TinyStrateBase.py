@@ -6,7 +6,7 @@
 from abc import abstractmethod
 from datetime import datetime
 from .TinyDefine import *
-from .vnpyInc import *
+# from .vnpyInc import *
 import futuquant as ft
 
 

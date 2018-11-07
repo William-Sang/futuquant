@@ -6,7 +6,7 @@ from futuquant.common.utils import *
 from futuquant.quote.quote_query import parse_head
 from .err import Err
 from .sys_config import SysConfig
-from .ft_logger import make_log_msg
+from .ft_logger import *
 
 if IS_PY2:
     import selectors2 as selectors
@@ -76,7 +76,7 @@ def is_socket_exception_wouldblock(e):
 
 
 def make_ctrl_socks():
-    return socket.socketpair(socket.AF_INET, socket.SOCK_STREAM)
+    return socket.socketpair()
 
 class NetManager:
     _default_inst = None
@@ -261,7 +261,7 @@ class NetManager:
         sync_req_rsp = None
         if not conn:
             logger.debug(
-                make_log_msg('Send fail', conn_id=conn_id, proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
+                FTLog.make_log_msg('Send fail', conn_id=conn_id, proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
                              msg=Err.ConnectionLost.text))
             ret_code, msg = RET_ERROR, Err.ConnectionLost.text
         else:
@@ -274,7 +274,7 @@ class NetManager:
             ret_code, msg = RET_ERROR, Err.NotConnected.text
 
         if ret_code != RET_OK:
-            logger.warning(make_log_msg('Send fail', proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
+            logger.warning(FTLog.make_log_msg('Send fail', proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
                                         conn_id=conn_id, msg=msg))
             if sync_req_rsp:
                 sync_req_rsp.ret, sync_req_rsp.msg = RET_ERROR, msg
@@ -300,7 +300,7 @@ class NetManager:
             self._watch_write(conn, True)
 
         if ret_code != RET_OK:
-            logger.warning(make_log_msg('Send error', conn_id=conn_id, msg=msg))
+            logger.warning(FTLog.make_log_msg('Send error', conn_id=conn_id, msg=msg))
             if sync_req_rsp:
                 sync_req_rsp.ret, sync_req_rsp.msg = RET_ERROR, msg
                 sync_req_rsp.event.set()

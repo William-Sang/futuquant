@@ -27,7 +27,7 @@
     "frame":
     {
         "_api_ip": "127.0.0.1",
-        "_api_port": 11122,
+        "_api_port": 11111,
         "_market": "HK",
         "_env_type": "SIMULATE",
         "_trade_password":"",
