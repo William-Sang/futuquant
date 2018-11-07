@@ -76,7 +76,7 @@ def is_socket_exception_wouldblock(e):
 
 
 def make_ctrl_socks():
-    return socket.socketpair(socket.AF_INET, socket.SOCK_STREAM)
+    return socket.socketpair()
 
 class NetManager:
     _default_inst = None
