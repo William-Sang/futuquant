@@ -457,7 +457,7 @@ class NetManager:
 
         if is_closed:
             self.close(conn.conn_id)
-            conn.handler.on_closed(conn.conn_id)
+            conn.handler.on_error(conn.conn_id, Err.ConnectionClosed.text)
         elif err:
             self.close(conn.conn_id)
             conn.handler.on_error(conn.conn_id, err)
