@@ -338,7 +338,7 @@ OptionType - 期权类型
 
  .. code-block:: protobuf
 
-	enum WarrantType
+	enum OptionType
 	{
 		OptionType_Unknown = 0; //未知
 		OptionType_Call = 1; //认购
@@ -446,7 +446,7 @@ SubType - 行情定阅类型
 	{
 		SubType_None = 0;
 		SubType_Basic = 1; //基础报价
-		SubType_OrderBook = 2; //摆盘
+		SubType_OrderBook = 2; //摆盘     
 		SubType_Ticker = 4; //逐笔
 		SubType_RT = 5; //分时
 		SubType_KL_Day = 6; //日K
@@ -461,6 +461,7 @@ SubType - 行情定阅类型
 		SubType_KL_Qurater = 15; //季K
 		SubType_KL_Year = 16; //年K
 		SubType_KL_3Min = 17; //3分K
+		SubType_OrderDetail = 18; //委托明细              
 	}
 	
 -----------------------------------------------
@@ -509,7 +510,7 @@ PushDataType - 推送数据来源分类，目前只有逐笔在使用
 	{
 		PushDataType_Unknow = 0;
 		PushDataType_Realtime = 1; //实时推送的数据
-		PushDataType_ByDisConn = 2; //对后台行情连接断开期间拉取补充的数据 最多750个
+		PushDataType_ByDisConn = 2; //对后台行情连接断开期间拉取补充的数据 最多50个
 		PushDataType_Cache = 3; //非实时非连接断开补充数据
 	}
 	
@@ -605,7 +606,7 @@ BasicQot - 基础报价
 		required Security security = 1; //股票
 		required bool isSuspended = 2; //是否停牌
 		required string listTime = 3; //上市日期字符串
-		required double priceSpread = 4; //价差
+		required double priceSpread = 4; //向上价差
 		required string updateTime = 5; //更新时间字符串
 		required double highPrice = 6; //最高价
 		required double openPrice = 7; //开盘价
@@ -750,6 +751,20 @@ OrderBook - 买卖十档摆盘
 		required double price = 1; //委托价格
 		required int64 volume = 2; //委托数量
 		required int32 orederCount = 3; //委托订单个数
+	}
+	
+-----------------------------------------------
+
+
+OrderDetail - 委托明细
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ .. code-block:: protobuf
+
+	message OrderDetail
+	{
+		required int32 orderCount = 1; //委托订单个数
+		required double orderVol = 2; //每笔委托的委托量，注意：当前只会返回最多前50笔委托的委托数量
 	}
 	
 -----------------------------------------------

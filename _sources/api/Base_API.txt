@@ -395,7 +395,11 @@ SubType - 实时数据定阅类型
   
  ..  py:attribute:: BROKER
  
-  买卖经纪
+   买卖经纪
+  
+ ..  py:attribute:: ORDER_DETAIL
+ 
+  委托摆盘明细
   
 
 --------------------------------------
@@ -825,7 +829,7 @@ PushDataType - 推送数据类型
   
  ..  py:attribute:: BYDISCONN
  
-  行情连接断开重连后，OpenD拉取补充断开期间的数据，最多750根
+  行情连接断开重连后，OpenD拉取补充断开期间的数据，最多50根
   
  ..  py:attribute:: CACHE
  

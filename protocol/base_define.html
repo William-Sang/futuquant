@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>基础定义 &mdash; futuquant 3.4 documentation</title>
+  <title>基础定义 &mdash; futuquant 3.5 documentation</title>
   
 
   
@@ -25,19 +25,23 @@
   
 
   
+  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="行情协议" href="quote_protocol.html" />
-    <link rel="prev" title="协议接口指南" href="intro.html" /> 
+  
+
+  
+
+  
+    <link rel="top" title="futuquant 3.5 documentation" href="../index.html"/>
+        <link rel="next" title="行情协议" href="quote_protocol.html"/>
+        <link rel="prev" title="协议接口指南" href="intro.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
@@ -59,7 +63,7 @@
             
             
               <div class="version">
-                3.4
+                3.5
               </div>
             
           
@@ -136,6 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#broker">Broker - 买卖经纪摆盘</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ticker">Ticker - 逐笔成交</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#orderbook">OrderBook - 买卖十档摆盘</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#orderdetail">OrderDetail - 委托明细</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#shareholdingchange">ShareHoldingChange - 持股变动</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#subinfo">SubInfo - 单个定阅类型信息</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connsubinfo">ConnSubInfo - 单条连接定阅信息</a></li>
@@ -180,7 +185,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">futuquant</a>
@@ -188,10 +193,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -220,7 +224,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/protocol/base_define.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/protocol/base_define.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -303,7 +307,7 @@
 <p class="first admonition-title">Note</p>
 <ul class="last simple">
 <li>请求其它协议前必须等InitConnect协议先完成</li>
-<li>若FutuOpenD配置了加密， “connAESKey”将用于后续协议加密</li>
+<li>若FutuOpenD配置了加密， &#8220;connAESKey&#8221;将用于后续协议加密</li>
 <li>keepAliveInterval 为建议client发起心跳 <a class="reference external" href="#keepalive-proto-1004">KeepAlive</a> 的间隔</li>
 </ul>
 </div>
@@ -582,7 +586,7 @@
 <div class="section" id="optiontype">
 <h3>OptionType - 期权类型<a class="headerlink" href="#optiontype" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><div class="highlight-protobuf"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">WarrantType</span>
+<div><div class="highlight-protobuf"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">OptionType</span>
 <span class="p">{</span>
         <span class="na">OptionType_Unknown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//未知</span>
         <span class="na">OptionType_Call</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//认购</span>
@@ -705,6 +709,7 @@
         <span class="na">SubType_KL_Qurater</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="c1">//季K</span>
         <span class="na">SubType_KL_Year</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span> <span class="c1">//年K</span>
         <span class="na">SubType_KL_3Min</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span> <span class="c1">//3分K</span>
+        <span class="na">SubType_OrderDetail</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span> <span class="c1">//委托明细</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -849,7 +854,7 @@
         <span class="k">required</span> <span class="n">Security</span> <span class="na">security</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//股票</span>
         <span class="k">required</span> <span class="kt">bool</span> <span class="na">isSuspended</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//是否停牌</span>
         <span class="k">required</span> <span class="kt">string</span> <span class="na">listTime</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//上市日期字符串</span>
-        <span class="k">required</span> <span class="kt">double</span> <span class="na">priceSpread</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//价差</span>
+        <span class="k">required</span> <span class="kt">double</span> <span class="na">priceSpread</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//向上价差</span>
         <span class="k">required</span> <span class="kt">string</span> <span class="na">updateTime</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">//更新时间字符串</span>
         <span class="k">required</span> <span class="kt">double</span> <span class="na">highPrice</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">//最高价</span>
         <span class="k">required</span> <span class="kt">double</span> <span class="na">openPrice</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span> <span class="c1">//开盘价</span>
@@ -992,6 +997,19 @@
         <span class="k">required</span> <span class="kt">double</span> <span class="na">price</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//委托价格</span>
         <span class="k">required</span> <span class="kt">int64</span> <span class="na">volume</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//委托数量</span>
         <span class="k">required</span> <span class="kt">int32</span> <span class="na">orederCount</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//委托订单个数</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="orderdetail">
+<h3>OrderDetail - 委托明细<a class="headerlink" href="#orderdetail" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><div class="highlight-protobuf"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">OrderDetail</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">orderCount</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//委托订单个数</span>
+        <span class="k">required</span> <span class="kt">double</span> <span class="na">orderVol</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//每笔委托的委托量，注意：当前只会返回最多前50笔委托的委托数量</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1365,7 +1383,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -1404,12 +1424,11 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'3.4',
-            LANGUAGE:'en',
+            VERSION:'3.5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -1423,11 +1442,14 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
+  
+  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
+          SphinxRtdTheme.StickyNav.enable();
       });
   </script>
+  
  
 <script type="text/javascript">
     console.log("Layout By FutuQuant");

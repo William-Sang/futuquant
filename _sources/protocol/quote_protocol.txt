@@ -613,6 +613,83 @@
 	* 经纪队列结构参考 `Broker <base_define.html#broker>`_	
 -------------------------------------
 
+`Qot_GetOrderDetail.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Qot_GetDetail.proto>`_ - 3016获取委托明细
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+.. code-block:: protobuf
+
+	syntax = "proto2";
+	package Qot_GetOrderDetail;
+
+	import "Common.proto";
+	import "Qot_Common.proto";
+
+	message C2S
+	{
+		required Qot_Common.Security security = 1; //股票
+	}
+
+	message S2C
+	{
+		required Qot_Common.Security security = 1; //股票
+		repeated Qot_Common.OrderDetail orderDetailAsk = 2; //卖盘
+		repeated Qot_Common.OrderDetail orderDetailBid = 3; //买盘
+	}
+
+	message Request
+	{
+		required C2S c2s = 1;
+	}
+
+	message Response
+	{
+		required int32 retType = 1 [default = -400]; //RetType,返回结果
+		optional string retMsg = 2;
+		optional int32 errCode = 3;
+		optional S2C s2c = 4;
+	}
+    
+.. note::
+
+	* 股票结构参考 `Security <base_define.html#security>`_
+	* 委托明细结构参考 `OrderDetail <base_define.html#orderdetail>`_
+	
+-------------------------------------
+
+`Qot_UpdateDetail.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Qot_UpdateDetail.proto>`_ - 3017推送委托明细
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+.. code-block:: protobuf
+
+	syntax = "proto2";
+	package Qot_UpdateOrderDetail;
+
+	import "Common.proto";
+	import "Qot_Common.proto";
+
+	message S2C
+	{
+		required Qot_Common.Security security = 1; //股票
+		repeated Qot_Common.OrderDetail orderDetailAsk = 2; //卖盘
+		repeated Qot_Common.OrderDetail orderDetailBid = 3; //买盘
+	}
+
+	message Response
+	{
+		required int32 retType = 1 [default = -400]; //RetType,返回结果
+		optional string retMsg = 2;
+		optional int32 errCode = 3;
+		
+		optional S2C s2c = 4;
+	}
+
+.. note::
+
+	* 股票结构参考 `Security <base_define.html#security>`_
+	* 委托明细结构参考 `OrderDetail <base_define.html#orderdetail>`_
+	
+-------------------------------------
+
 `Qot_GetHistoryKL.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Qot_GetHistoryKL.proto>`_ - 3100获取单只股票一段历史K线
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1037,7 +1114,7 @@
 		required bool isSuspend = 3; //是否停牌
 		required string listTime = 4; //上市时间字符串
 		required int32 lotSize = 5; //每手数量
-		required double priceSpread = 6; //价差
+		required double priceSpread = 6; //向上价差
 		required string updateTime = 7; //更新时间字符串
 		required double highPrice = 8; //最新价
 		required double openPrice = 9; //开盘价
