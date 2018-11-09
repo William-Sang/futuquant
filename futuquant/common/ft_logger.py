@@ -57,9 +57,6 @@ else:  # pragma: no cover
 __LogPathName__ = "com.futunn.FutuOpenD//Log"
 
 
-
-
-
 class FTLog(object):
 
     BOTH_FILE_CONSOLE = 3
@@ -180,8 +177,6 @@ class FTLog(object):
 
     def info(self, msg, *args, **kwargs):
         self.info2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
-
-
 
     def findCaller(self):
         """
